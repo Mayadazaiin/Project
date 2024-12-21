@@ -1,0 +1,75 @@
+<div class="box pt-5">
+  <div class="my-2 w-25">
+    <app-select [data]="categories" [title]="'Categories'" (selectedValue)="filterCategory($event)"></app-select>
+  </div>
+
+  <div class="products-container" *ngIf="!loading">
+    <div class="product-card" *ngFor="let item of products">
+      <app-product [data]="item" (item)="addToCart($event)">Add To Cart</app-product>
+    </div>
+  </div>
+
+  <!-- Trigger Button -->
+  <button class="btn btn-primary" (click)="openModal()">Add New Product</button>
+
+  <!-- Modal Dialog -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add New Product</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="form">
+            <div class="form-group">
+              <label>Title</label>
+              <input type="text" class="form-control" formControlName="title" placeholder="Enter product title" />
+              <small class="text-danger" *ngIf="form.get('title')?.touched && form.get('title')?.invalid">
+                Title is required.
+              </small>
+            </div>
+            <div class="form-group">
+              <label>Price</label>
+              <input type="number" class="form-control" formControlName="price" placeholder="Enter product price" />
+              <small class="text-danger" *ngIf="form.get('price')?.touched && form.get('price')?.invalid">
+                Price is required.
+              </small>
+            </div>
+            <div class="form-group">
+              <label>Category</label>
+              <select class="form-control" formControlName="category">
+                <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+              </select>
+              <small class="text-danger" *ngIf="form.get('category')?.touched && form.get('category')?.invalid">
+                Category is required.
+              </small>
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea class="form-control" formControlName="description"
+                placeholder="Enter product description"></textarea>
+              <small class="text-danger" *ngIf="form.get('description')?.touched && form.get('description')?.invalid">
+                Description is required.
+              </small>
+            </div>
+            <div class="form-group">
+              <label>Image</label>
+              <img *ngIf="base64" [src]="base64" alt="Preview" class="img-thumbnail mb-2" />
+              <input type="file" class="form-control" (change)="getImagePath($event)" />
+              <small class="text-danger" *ngIf="form.get('image')?.touched && form.get('image')?.invalid">
+                Image is required.
+              </small>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+  <button [disabled]="form.invalid" (click)="addProduct()" class="btn btn-primary">
+    Add Product
+  </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
